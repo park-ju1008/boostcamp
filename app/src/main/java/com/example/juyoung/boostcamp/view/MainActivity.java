@@ -1,6 +1,8 @@
 package com.example.juyoung.boostcamp.view;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +22,7 @@ public class MainActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainViewModel = new MainViewModel(this,mainActivityNavigator);
         binding.setMainViewModel(mainViewModel);
+
         binding.recyclerviewMainMovie.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -45,10 +48,19 @@ public class MainActivity extends BaseActivity {
         public void offProgress() {
             progressOFF();
         }
+
+        @Override
+        public Boolean isNetWork() {
+            return isNetwork();
+        }
     };
 
 
-
+    //네트워크 연결상태 확인
+    private Boolean isNetwork() {
+        ConnectivityManager connectivityManager = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
+    }
 
 
 }

@@ -2,6 +2,7 @@ package com.example.juyoung.boostcamp.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,7 +22,7 @@ public class MainViewModel extends ViewModel {
     private Boolean endLine = false;
     private String searchText;
 
-    public MainViewModel(Context context,MainActivityNavigator mainActivityNavigator) {
+    public MainViewModel(Context context, MainActivityNavigator mainActivityNavigator) {
         adapter = new MainRecyclerViewAdapter(context);
         this.mainActivityNavigator = mainActivityNavigator;
     }
@@ -32,31 +33,36 @@ public class MainViewModel extends ViewModel {
 
 
     public void onButtonClick(View view) {
-        mainActivityNavigator.onProgress();
-        searchText = mainActivityNavigator.getText();
-        if (searchText.isEmpty()) {
-            Toast.makeText(view.getContext(), "검색어를 입력하세요.", Toast.LENGTH_SHORT).show();
-        } else {
-            page=1;
-            List<Movie> movies = RetrofitService.getInstance().getMoviewList(searchText, display, page);
-            if(movies.isEmpty()){
-                Toast.makeText(view.getContext(), "'"+searchText+"'검색결과가 없습니다..", Toast.LENGTH_SHORT).show();
-            }else{
-                page+=movies.size();
-                endLine=false;
+
+        if (mainActivityNavigator.isNetWork()) {
+            mainActivityNavigator.onProgress();
+            searchText = mainActivityNavigator.getText();
+            if (searchText.isEmpty()) {
+                Toast.makeText(view.getContext(), "검색어를 입력하세요.", Toast.LENGTH_SHORT).show();
+            } else {
+                page = 1;
+                List<Movie> movies = RetrofitService.getInstance().getMoviewList(searchText, display, page);
+                if (movies.isEmpty()) {
+                    Toast.makeText(view.getContext(), "'" + searchText + "'검색결과가 없습니다..", Toast.LENGTH_SHORT).show();
+                } else {
+                    page += movies.size();
+                    endLine = false;
+                }
+                this.adapter.updateItems(movies);
+                mainActivityNavigator.offProgress();
             }
-            this.adapter.updateItems(movies);
-            mainActivityNavigator.offProgress();
+        }else{
+            Toast.makeText(view.getContext(), "휴대폰의 네트워크 연결상태를 확인하세요.", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    public void  OnScroll(RecyclerView recyclerView, int dx, int dy) {
+    public void OnScroll(RecyclerView recyclerView, int dx, int dy) {
         LinearLayoutManager llManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (!endLine && dy > 0 && llManager.findLastCompletelyVisibleItemPosition() > (adapter.getItemCount() - display/2)) {
+        if (!endLine && dy > 0 && llManager.findLastCompletelyVisibleItemPosition() > (adapter.getItemCount() - display / 2)) {
             List<Movie> movies = RetrofitService.getInstance().getMoviewList(searchText, display, page);
             if (movies.size() == display) {
-                page+=display;
+                page += display;
             } else {
                 endLine = true;
             }
@@ -70,5 +76,9 @@ public class MainViewModel extends ViewModel {
         void onProgress();
 
         void offProgress();
+
+        Boolean isNetWork();
     }
+
+
 }
