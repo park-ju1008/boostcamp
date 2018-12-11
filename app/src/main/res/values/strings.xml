@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">boostcamp</string>
+    <string name="main_searchbutton">검색</string>
+    <string name="main_searchhint">검색어를 입력하세요.</string>
+</resources>

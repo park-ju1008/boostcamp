@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="movie"
+            type="com.example.juyoung.boostcamp.model.Movie"/>
+    </data>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/imageview_item_movie"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            app:error="@{@drawable/no_image}"
+            app:imageUrl="@{movie.image}" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textview_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{movie.title}"
+                android:textColor="@android:color/background_dark"
+                android:textSize="16sp" />
+
+            <RatingBar
+                android:id="@+id/ratingbar_item_userrating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:rating="@{movie.userRating}"
+                android:stepSize="0.5"
+                />
+
+            <TextView
+                android:id="@+id/textview_item_pubdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{movie.pubDate}" />
+
+            <TextView
+                android:id="@+id/textview_item_director"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{movie.director}" />
+
+            <TextView
+                android:id="@+id/textview_item_actor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{movie.actor}" />
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
